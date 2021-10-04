@@ -1,8 +1,10 @@
 package net.voznjuk.fp.controller;
 
 import net.voznjuk.fp.domain.Invoice;
+import net.voznjuk.fp.domain.User;
 import net.voznjuk.fp.repos.InvoiceRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +32,12 @@ public class MainController {
     }
 
     @PostMapping("/main")
-    public String add(@RequestParam String status, @RequestParam String comment, Map<String, Object> model){
-        Invoice invoice = new Invoice(comment, status);
+    public String add(
+            @AuthenticationPrincipal User user,
+            @RequestParam String status,
+            @RequestParam String comment, Map<String, Object> model
+    ){
+        Invoice invoice = new Invoice(comment, status, user);
         invoiceRepo.save(invoice);
 
         Iterable<Invoice> invoices = invoiceRepo.findAll();

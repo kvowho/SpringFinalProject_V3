@@ -1,9 +1,6 @@
 package net.voznjuk.fp.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Invoice {
@@ -14,12 +11,29 @@ public class Invoice {
     private String comment;
     private String status;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User author;
+
     public Invoice() {
     }
 
-    public Invoice(String comment, String status) {
+    public Invoice(String comment, String status, User user) {
+        this.author = user;
         this.comment = comment;
         this.status = status;
+    }
+
+    public String getAuthorName (){
+        return author != null ? author.getUsername() : "<none>";
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public String getComment() {
